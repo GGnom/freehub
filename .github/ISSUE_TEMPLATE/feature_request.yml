@@ -1,0 +1,36 @@
+name: Feature request
+description: Идея нового провайдера, режима или улучшения
+title: "[feature] "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Какую задачу это решает
+      description: Опишите ситуацию, а не только решение
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Предлагаемое решение
+      description: Как это могло бы работать в freehub
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Область
+      options:
+        - Провайдер / каталог моделей
+        - Роутинг и fallback
+        - Tool calling / стриминг
+        - Веб-UI
+        - Мост веб-чатов
+        - Конфиг и CLI
+        - Другое
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Альтернативы
+      description: Что вы пробовали или рассматривали

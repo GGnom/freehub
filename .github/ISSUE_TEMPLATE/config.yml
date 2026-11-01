@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/GGnom/freehub/security/advisories/new
+    about: Сообщайте об уязвимостях приватно, а не в публичном issue.

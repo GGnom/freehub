@@ -3,6 +3,7 @@
 [![CI](https://github.com/GGnom/freehub/actions/workflows/ci.yml/badge.svg)](https://github.com/GGnom/freehub/actions/workflows/ci.yml)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![node](https://img.shields.io/badge/node-%3E%3D18.17-brightgreen)](package.json)
+[![GitHub stars](https://img.shields.io/github/stars/GGnom/freehub?style=social)](https://github.com/GGnom/freehub/stargazers)
 
 Локальный **OpenAI-совместимый шлюз** к бесплатным и дешёвым LLM: один процесс, ноль
 зависимостей, встроенный веб-UI. Роутит запросы по провайдерам, делает fallback при ошибках,
@@ -51,6 +52,10 @@ node freehub.cjs serve
 node freehub.cjs key set groq gsk_...
 node freehub.cjs test            # проверка tool calling через запущенный сервер
 ```
+
+Готовый Windows-билд лежит в [Releases](https://github.com/GGnom/freehub/releases/latest):
+`freehub.exe` (Node SEA) и `freehub.exe.sha256`. Сборка не подписана — SmartScreen может
+предупредить при первом запуске.
 
 Готовый `freehub.exe` (Windows, Node SEA) собирается локально — см. [Сборка](#сборка-exe);
 бинарники в репозиторий не коммитятся.
@@ -247,7 +252,8 @@ npx postject freehub.exe NODE_SEA_BLOB freehub.blob --sentinel-fuse NODE_SEA_FUS
 ```
 
 `build/freehub.blob` собирается из `../freehub.cjs` (см. `build/sea-config.json`). Готовый exe
-удобно выкладывать в GitHub Releases, а не в git.
+удобно выкладывать в GitHub Releases, а не в git — актуальная сборка лежит в
+[Releases](https://github.com/GGnom/freehub/releases/latest).
 
 ## Ограничения
 

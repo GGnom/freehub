@@ -1,0 +1,77 @@
+name: Bug report
+description: Что-то работает не так — маршрутизация, стриминг, tool calling, UI, мост
+title: "[bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Спасибо за репорт. Пожалуйста, не вставляйте сюда API-ключи и содержимое
+        `~/.freehub/keys.json` — маскируйте их.
+  - type: input
+    id: version
+    attributes:
+      label: Версия freehub
+      description: Поле `version` из `GET /healthz` или из `GET /api/status`
+      placeholder: 0.2.0
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: ОС
+      options:
+        - Windows
+        - Linux
+        - macOS
+        - Другое
+    validations:
+      required: true
+  - type: input
+    id: node
+    attributes:
+      label: Node.js
+      description: Вывод `node --version` (или «SEA exe»)
+      placeholder: v22.11.0
+  - type: dropdown
+    id: provider
+    attributes:
+      label: Провайдер
+      description: Где воспроизводится проблема
+      options:
+        - Встроенный провайдер
+        - Свой провайдер (custom API)
+        - Ollama / LM Studio
+        - Мост веб-чатов
+        - Не важно / все
+  - type: textarea
+    id: what
+    attributes:
+      label: Что произошло
+      description: Ожидаемое и фактическое поведение
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Как воспроизвести
+      placeholder: |
+        1. model=...
+        2. запрос ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Логи и ответ
+      description: Хвост `~/.freehub/freehub.log`, HTTP-статус, заголовок `x-freehub-provider`
+      render: text
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Проверки
+      options:
+        - label: Я убрал(а) ключи и персональные данные из логов
+          required: true
+        - label: Проблема воспроизводится на последней версии
