@@ -1135,6 +1135,9 @@ function startServer(cfg) {
     // ключи и конфиг перечитываем на каждый запрос — изменения подхватываются без рестарта
     const keys = loadKeys();
     cfg = loadConfig();
+    // Реальный адрес прослушивания важнее конфига: `serve --port` не должен ломать /api.
+    cfg.port = boundPort;
+    cfg.host = boundHost;
     const url = (req.url || '/').split('?')[0];
     const query = new URLSearchParams((req.url || '').split('?')[1] || '');
     const isApi = url === '/api' || url.startsWith('/api/');
@@ -1412,8 +1415,13 @@ function startServer(cfg) {
       sendJson(res, 500, { error: { message: String(e.message || e), type: 'internal_error' } });
     }
   });
+  // Фактический адрес прослушивания (с учётом `serve --port` и порта 0).
+  let boundPort = cfg.port;
+  let boundHost = cfg.host;
   server.listen(cfg.port, cfg.host, () => {
-    log(`freehub слушает http://${cfg.host}:${cfg.port}/v1 (провайдеров с ключами: ${Object.keys(loadKeys()).length})`);
+    const addr = server.address();
+    if (addr && typeof addr === 'object') { boundPort = addr.port; boundHost = addr.address; }
+    log(`freehub слушает http://${boundHost}:${boundPort}/v1 (провайдеров с ключами: ${Object.keys(loadKeys()).length})`);
     if (Object.keys(loadKeys()).length === 0 && cfg.autoOpenOnFirstRun) {
       console.log('\nКлючей пока нет — открываю консоли бесплатных сервисов за API-ключами.');
       console.log('Забери ключ и сохрани:  freehub key set groq gsk_...\n');

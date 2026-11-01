@@ -66,7 +66,9 @@ const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'freehub-test-'));
 const home = path.join(tmp, 'home');
 fs.mkdirSync(home, { recursive: true });
 
-const [pFail, pOk, pSse, pCustom, pFreehub] = await Promise.all([freePort(), freePort(), freePort(), freePort(), freePort()]);
+const [pFail, pOk, pSse, pCustom, pFreehub, pAlt] = await Promise.all([
+  freePort(), freePort(), freePort(), freePort(), freePort(), freePort(),
+]);
 const decoyPort = await freePort();
 
 const providers = (port, label) => ({
@@ -102,15 +104,19 @@ try {
   start([MOCK, String(pOk), 'ok']);
   start([MOCK, String(pSse), 'sse']);
   start([MOCK, String(pCustom), 'ok']);
-  start([FREEHUB, 'serve'], { FREEHUB_HOME: home });
+  start([FREEHUB, 'serve', '--port', String(pAlt)], { FREEHUB_HOME: home });
 
-  const base = `http://127.0.0.1:${pFreehub}`;
+  const base = `http://127.0.0.1:${pAlt}`;
   const health = await waitFor(base + '/healthz');
   check('server starts and /healthz answers', !!health, health ? '' : 'no answer');
   if (!health) throw new Error('server did not start');
 
   const healthJson = await health.json();
   check('healthz reports a version', typeof healthJson.version === 'string' && healthJson.version.length > 0);
+
+  const status = await (await fetch(base + '/api/status', { headers: { origin: base } })).json();
+  check('serve --port overrides the configured port consistently',
+    status.baseUrl === `http://127.0.0.1:${pAlt}/v1`, status.baseUrl);
 
   const models = await (await fetch(base + '/v1/models')).json();
   const ids = models.data.map((m) => m.id);
