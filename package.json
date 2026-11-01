@@ -1,0 +1,41 @@
+{
+  "name": "freehub",
+  "version": "0.2.0",
+  "description": "Local OpenAI-compatible gateway to free LLM providers with tool calling, fallback, web UI and a web-chat bridge",
+  "license": "MIT",
+  "bin": {
+    "freehub": "./freehub.cjs"
+  },
+  "main": "freehub.cjs",
+  "files": [
+    "freehub.cjs",
+    "README.md",
+    "LICENSE",
+    "SECURITY.md",
+    "test/mock-openai.cjs",
+    "test/run-tests.mjs",
+    "build/sea-config.json"
+  ],
+  "scripts": {
+    "start": "node freehub.cjs serve",
+    "test": "node test/run-tests.mjs",
+    "sea:blob": "node --experimental-sea-config build/sea-config.json"
+  },
+  "engines": {
+    "node": ">=18.17"
+  },
+  "keywords": [
+    "openai",
+    "openai-compatible",
+    "llm",
+    "gateway",
+    "proxy",
+    "tool-calling",
+    "function-calling",
+    "free-llm",
+    "groq",
+    "gemini",
+    "ollama",
+    "local-first"
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "port": 8790,
+  "host": "127.0.0.1",
+  "autoOpenOnFirstRun": false,
+  "requestTimeoutMs": 30000,
+  "modelsCacheMs": 300000,
+  "autoPriority": ["mocksse", "mocka", "mockb"],
+  "providers": {
+    "mocka": {
+      "label": "Mock A (всегда 429)",
+      "baseURL": "http://127.0.0.1:9997/v1",
+      "apiKey": "mock-key-123",
+      "defaultModel": "mock-chat",
+      "models": [{ "id": "mock-chat", "tools": true }],
+      "allowedParams": ["temperature", "max_tokens"],
+      "consoleUrl": "https://example.com/a",
+      "priority": 5
+    },
+    "mockb": {
+      "label": "Mock B (ok)",
+      "baseURL": "http://127.0.0.1:9998/v1",
+      "apiKey": "mock-key-123",
+      "defaultModel": "mock-chat",
+      "models": [{ "id": "mock-chat", "tools": true }, { "id": "mock-pro", "tools": true }],
+      "allowedParams": ["temperature", "max_tokens"],
+      "consoleUrl": "https://example.com/b",
+      "priority": 6
+    },
+    "mocksse": {
+      "label": "Mock SSE",
+      "baseURL": "http://127.0.0.1:9999/v1",
+      "apiKey": "mock-key-123",
+      "defaultModel": "mock-chat",
+      "models": [{ "id": "mock-chat", "tools": true }],
+      "allowedParams": ["temperature", "max_tokens"],
+      "consoleUrl": "https://example.com/sse",
+      "priority": 4
+    }
+  }
+}

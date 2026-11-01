@@ -1,0 +1,6 @@
+{
+  "main": "../freehub.cjs",
+  "output": "freehub.blob",
+  "disableExperimentalSEAWarning": true,
+  "useCodeCache": true
+}

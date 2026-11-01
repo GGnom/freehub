@@ -1,0 +1,27 @@
+# Зависимости и артефакты сборки
+node_modules/
+build/node_modules/
+
+# Бинарники: собираются локально, в git не место (см. Releases)
+*.exe
+*.blob
+build/*.exe
+build/*.blob
+
+# Бэкапы и локные копии
+*.bak
+*.bak-*
+*.bak.*
+
+# Логи и рантайм-данные
+*.log
+test/home/models-cache.json
+test/home/keys.json
+.freehub/
+
+# ОС и редакторы
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
