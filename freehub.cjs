@@ -18,10 +18,14 @@ const CONFIG_FILE = path.join(DIR, 'config.json');
 const KEYS_FILE = path.join(DIR, 'keys.json');
 const WEBKEY_KEYS = path.join(HOME, '.zcode', 'webkey', 'keys.json');
 const LOG_FILE = path.join(DIR, 'freehub.log');
-// Версия: package.json рядом (когда запущен из репозитория); в SEA-exe файла нет.
+// Версия: package.json репозитория рядом (когда запущен из исходников). В SEA-exe
+// манифеста нет, поэтому остаётся запасное значение — держим его в синхроне с package.json.
 const VERSION = (() => {
-  try { return JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version || '0.0.0'; }
-  catch { return '0.2.0'; }
+  try {
+    const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'));
+    if (pkg && pkg.name === 'freehub' && pkg.version) return pkg.version;
+  } catch {}
+  return '0.2.0';
 })();
 // ---------------------------------------------------------------------------
 // Каталог провайдеров. free: 'free' — бесплатный тариф, 'trial' — стартовые токены,
