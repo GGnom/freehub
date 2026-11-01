@@ -255,6 +255,10 @@ npx postject freehub.exe NODE_SEA_BLOB freehub.blob --sentinel-fuse NODE_SEA_FUS
 удобно выкладывать в GitHub Releases, а не в git — актуальная сборка лежит в
 [Releases](https://github.com/GGnom/freehub/releases/latest).
 
+Начиная с 0.2.0 релизный workflow (`.github/workflows/release.yml`) сам собирает `freehub.exe`
+на Windows-раннере при пуше тега `v*`, прогоняет smoke-тест `/healthz` и прикладывает бинарник
+с SHA-256 к релизу тега.
+
 ## Ограничения
 
 - Живой список моделей не сообщает, поддерживает ли модель tool calling; freehub помечает все

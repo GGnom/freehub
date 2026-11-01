@@ -1,0 +1,63 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  windows-exe:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Build SEA blob
+        working-directory: build
+        run: node --experimental-sea-config sea-config.json
+
+      - name: Install build dependencies
+        run: npm ci --prefix build
+
+      - name: Inject the blob into node.exe
+        run: |
+          Copy-Item "$env:ProgramFiles\nodejs\node.exe" build\freehub.exe -Force
+          node build\node_modules\postject\dist\cli.js build\freehub.exe NODE_SEA_BLOB build\freehub.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2
+
+      - name: Smoke test the executable
+        run: |
+          $env:FREEHUB_HOME = Join-Path $env:RUNNER_TEMP "freehub-home"
+          New-Item -ItemType Directory -Force $env:FREEHUB_HOME | Out-Null
+          '{"port":8799,"host":"127.0.0.1","autoOpenOnFirstRun":false,"bridge":{"enabled":false},"providers":{}}' |
+            Set-Content (Join-Path $env:FREEHUB_HOME "config.json") -Encoding UTF8
+          $p = Start-Process -FilePath build\freehub.exe -ArgumentList "serve" -PassThru -WindowStyle Hidden
+          try {
+            Start-Sleep -Seconds 3
+            $h = Invoke-RestMethod http://127.0.0.1:8799/healthz -TimeoutSec 5
+            "version=$($h.version) ok=$($h.ok)"
+          } finally {
+            Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
+          }
+
+      - name: Checksum
+        run: |
+          $h = (Get-FileHash build\freehub.exe -Algorithm SHA256).Hash.ToLower()
+          "$h  freehub.exe" | Set-Content build\freehub.exe.sha256 -Encoding ascii
+          Get-Content build\freehub.exe.sha256
+
+      - name: Publish to the tag's release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release view $env:TAG 2>$null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $env:TAG --title "freehub $env:TAG" --notes "Windows build. See CHANGELOG.md for details."
+          }
+          gh release upload $env:TAG build\freehub.exe build\freehub.exe.sha256 --clobber
